@@ -1,0 +1,74 @@
+type: SampleIterator
+args:
+  fasta_file:
+    doc: Reference genome sequence
+    example:
+      url: https://zenodo.org/record/1466102/files/example_files-hg38_chr22.fa?download=1
+      md5: b0f5cdd4f75186f8a4d2e23378c57b5b
+  gtf_file:
+    doc: file path; Genome annotation GTF file
+    example:
+      url: https://zenodo.org/record/1466102/files/example_files-gencode.v24.annotation_chr22.gtf?download=1
+      md5: c0d1bf7738f6a307b425e4890621e7d9
+  vcf_file:
+    doc: >
+      bgzipped vcf file with the variants that are to be investigated.
+      Must be sorted and tabix index present.
+      Filter out any variants with non-DNA symbols!
+    example:
+      url: https://zenodo.org/record/3584238/files/chr22utrVar1000gen_sorted_nodup.vcf.gz?download=1
+      md5: 12c3482de03df39fffc99f554fbeab69
+#  vcf_file.tbi:
+#    doc: tabix index of vcf
+#    example:
+#      url: https://zenodo.org/record/3584238/files/chr22utrVar1000gen_sorted_nodup.vcf.gz.tbi?download=1
+#      md5: a27fc589f89b2af5b1b18455f2a842e0
+#  disable_infer_transcripts:
+#    doc: option to disable infering transcripts. Can be True if the gtf file has transcripts annotated.
+#  disable_infer_genes:
+#    doc: option to disable infering genes. Can be True if the gtf file has genes annotated.
+
+defined_as: dataloader.py::FixedSeqPolyaDl
+
+dependencies:
+  conda:
+    - bioconda::pybedtools
+  pip:
+    - kipoi
+    - kipoiseq
+    - gffutils
+
+info:
+  authors:
+  - github: shabnamsadegh
+    name: Shabnam Sadegharmaki
+  - github: avsecz
+    name: Ziga Avsec
+  - github: MuhammedHasan
+    name: Muhammed Hasan Çelik
+  - github: hoeze
+    name: Florian R. Hölzlwimmer
+  doc: Dataloader for 5-prime UTR
+
+output_schema:
+
+  inputs:
+    name: seq
+    associated_metadata: ranges
+    doc: One-hot encoded RNA sequence
+    shape: (205, 4)
+    special_type: DNASeq
+
+  metadata:
+    ranges:
+      doc: Ranges describing inputs.seq
+      type: GenomicRanges
+    gene_biotype:
+      doc: gene biotype, can be used to filter protein coding genes for instance
+      type: str
+    gene_id:
+      doc: gene ID
+      type: str
+    transcript_id:
+      doc: transcript ID
+      type: str
